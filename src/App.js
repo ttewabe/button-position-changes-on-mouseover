@@ -4,66 +4,84 @@ import "./App.css";
 function App() {
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState("");
-  const [isInvalid, setIsInvalid] = useState(false);
+  const [isMoved, setIsMoved] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value)
+  }
 
-    if (id === "emailInput") {
-      setEmail(value);
-    } else if (id === "numberInput") {
-      setNumber(value);
+  const handleNumberChange = (e) => {
+    setNumber(e.target.value)
+  }
+  const handleMouseOver = () => {
+    if (!isValidEmail(email) || !isValidPhoneNumber(number)) {
+      if (!isMoved) {
+        setIsMoved(true);
+      } else {
+        setIsMoved(false);
+      }
     }
+  }
 
-    // Check validation on input change
-    validateInputs();
-  };
+  //color change 
+  const handleColorChange = () => {
+    if (isValidEmail(email) && isValidPhoneNumber(number)) {
+      return 'green'
+    }else{
+      return 'red';
+    }
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+// Check validation on form submit
+  const isValidEmail = (email) => {
+    return email.includes("@");
+  }
 
-    // Check validation on form submit
-    validateInputs();
-  };
-
-  const validateInputs = () => {
-    const isValidEmail = email.includes("@");
-    const isValidPhoneNumber = /^\d+$/.test(number);
-
-    setIsInvalid(!isValidEmail || !isValidPhoneNumber);
+  const isValidPhoneNumber = (email) => {
+    return /^\d+$/.test(number);
   };
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
+      <form>
         <input
           type="text"
           placeholder="first name"
-          onChange={handleInputChange}
         />
+        <br />
+
         <input
           type="text"
           placeholder="last name"
-          onChange={handleInputChange}
         />
+        <br /> 
+
         <input
           type="text"
           placeholder="email"
           id="emailInput"
           value={email}
-          onChange={handleInputChange}
+          onChange={handleEmailChange}
         />
+        <br />
+
         <input
           type="text"
           placeholder="number"
           id="numberInput"
           value={number}
-          onChange={handleInputChange}
+          onChange={handleNumberChange}
         />
+        <br />
+
         <button
           type="submit"
           id="submitButton"
-          className={isInvalid ? "invalid" : ""}
+          onMouseOver={handleMouseOver}
+          style={{
+            transform: isMoved ? `translateX(${100}px)` : 'translateX(0)',
+            backgroundColor: handleColorChange(),
+          }}
         >
           Submit
         </button>
